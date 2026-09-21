@@ -1,0 +1,30 @@
+# Déploiement Netlify.
+#
+# Ce fichier est la SEULE adhérence à Netlify du projet. Le supprimer suffit
+# à déployer ailleurs : rien dans le code applicatif ne dépend de Netlify.
+# Voir la section « Migration » du README.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Le plugin officiel prend en charge le rendu serveur, les routes API et les
+# images. Installez-le via `npm i -D @netlify/plugin-nextjs`.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Les ressources statiques portent une empreinte dans leur nom : cache long.
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

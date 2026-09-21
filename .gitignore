@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.env
+.env.local
+*.db
+*.db-journal
+.DS_Store
+.netlify
+tsconfig.tsbuildinfo
+next-env.d.ts
+

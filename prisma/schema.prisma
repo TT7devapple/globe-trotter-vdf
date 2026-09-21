@@ -1,0 +1,78 @@
+// Globe Trotter Val de Fontenay — schéma de base de données
+//
+// PORTABILITÉ : le provider est piloté par la variable d'environnement.
+//   - Développement local  : DATABASE_URL="file:./dev.db"      + provider "sqlite"
+//   - Production (Netlify, Vercel, VPS, Docker…) : Postgres     + provider "postgresql"
+// Pour passer en Postgres, remplacez simplement `provider = "sqlite"` ci-dessous
+// par `provider = "postgresql"`. Aucun autre fichier n'est à modifier.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Statuts possibles d'une réservation.
+/// SQLite ne supporte pas les enums Prisma : on utilise une String contrainte
+/// côté applicatif par le schéma Zod (lib/validation.ts). Le passage à Postgres
+/// n'impose donc aucune migration de données.
+model Reservation {
+  id        String   @id @default(cuid())
+  reference String   @unique // ex. "GT-7F3K2A" — communiquée au client
+
+  firstName String
+  lastName  String
+  phone     String
+  email     String
+
+  /// Date du repas, normalisée à minuit UTC (voir lib/datetime.ts)
+  date    DateTime
+  /// Heure au format "HH:mm" — appartient toujours à un créneau de service
+  time    String
+  /// Service concerné : "midi" | "soir"
+  service String
+  guests  Int
+
+  notes String?
+
+  /// "EN_ATTENTE" | "CONFIRMEE" | "ANNULEE"
+  status String @default("EN_ATTENTE")
+
+  /// Note interne rédigée par le restaurant depuis /admin
+  adminNote String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date, service])
+  @@index([status])
+  @@index([email])
+}
+
+/// Capacité exceptionnelle / fermeture ponctuelle définie depuis l'admin.
+/// Si aucune ligne n'existe pour une date, la capacité par défaut de
+/// data/restaurant.ts s'applique.
+model CapacityOverride {
+  id      String   @id @default(cuid())
+  date    DateTime
+  service String // "midi" | "soir"
+  /// Nombre de couverts réservables en ligne ; 0 = fermé à la réservation
+  seats   Int
+  reason  String?
+
+  @@unique([date, service])
+}
+
+/// Compte administrateur. Le premier compte est créé par `npm run db:seed`
+/// à partir de ADMIN_EMAIL / ADMIN_PASSWORD.
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  lastLoginAt  DateTime?
+}

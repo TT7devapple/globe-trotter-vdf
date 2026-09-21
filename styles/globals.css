@@ -1,0 +1,357 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --shell-gutter: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --shell-gutter: 2rem;
+    }
+  }
+
+  * {
+    @apply border-white/5;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Compense la hauteur de l'en-tête fixe lors des ancres */
+    scroll-padding-top: 6rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-void text-titanium font-sans antialiased;
+    /* Aucune barre de défilement horizontale, à aucune largeur */
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    @apply bg-aurora/30 text-chrome;
+  }
+
+  /* Focus visible et lisible partout — exigence d'accessibilité */
+  :focus-visible {
+    @apply outline-none ring-2 ring-aurora ring-offset-2 ring-offset-void rounded-sm;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-chrome font-display;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Barre de défilement discrète, cohérente avec l'interface */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-void;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-deck rounded-full border-2 border-void;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-steel/60;
+  }
+}
+
+@layer components {
+  /* ——— Conteneur principal ——— */
+  .shell {
+    @apply mx-auto w-full max-w-shell;
+    padding-inline: var(--shell-gutter);
+  }
+
+  /* ——— Micro-label type panneau d'aéroport ——— */
+  .eyebrow {
+    @apply font-mono text-micro uppercase text-steel;
+  }
+
+  /* ——— Surface vitrée ——— */
+  .glass {
+    @apply border border-white/10 bg-white/[0.035] backdrop-blur-xl;
+  }
+
+  /* ——— Filet lumineux horizontal ——— */
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent;
+  }
+
+  /* ——— Boutons ——— */
+  .btn {
+    @apply relative inline-flex items-center justify-center gap-2.5 overflow-hidden
+           rounded-full px-6 py-3.5 font-mono text-micro uppercase
+           transition-all duration-300 ease-out
+           disabled:cursor-not-allowed disabled:opacity-40;
+    /* Cible tactile confortable sur mobile */
+    min-height: 48px;
+  }
+
+  .btn-primary {
+    @apply bg-ember text-void shadow-glow-ember;
+  }
+  .btn-primary:hover:not(:disabled) {
+    @apply -translate-y-0.5 bg-[#ff8d5e];
+    box-shadow: 0 0 0 1px rgba(255, 122, 69, 0.45), 0 24px 70px -18px rgba(255, 122, 69, 0.75);
+  }
+
+  .btn-ghost {
+    @apply border border-white/15 bg-white/[0.03] text-chrome backdrop-blur-md;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    @apply -translate-y-0.5 border-aurora/40 bg-aurora/[0.07] text-white;
+  }
+
+  .btn-quiet {
+    @apply text-steel;
+  }
+  .btn-quiet:hover:not(:disabled) {
+    @apply text-chrome;
+  }
+
+  /* ——— Champs de formulaire ——— */
+  .field {
+    @apply w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5
+           text-base text-chrome placeholder:text-steel/60
+           transition-colors duration-200;
+    /* 16px minimum : empêche le zoom automatique sur iOS */
+    font-size: 16px;
+  }
+  .field:hover {
+    @apply border-white/20;
+  }
+  .field:focus {
+    @apply border-aurora/50 bg-aurora/[0.04] outline-none ring-2 ring-aurora/30 ring-offset-0;
+  }
+  .field[aria-invalid='true'] {
+    @apply border-ember/60 bg-ember/[0.05];
+  }
+
+  .field-label {
+    @apply mb-2 block font-mono text-micro-sm uppercase text-steel;
+  }
+
+  .field-error {
+    @apply mt-1.5 flex items-start gap-1.5 text-sm text-ember;
+  }
+
+  /* ——— Étiquette de statut ——— */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1
+           font-mono text-micro-sm uppercase;
+  }
+
+  /* ——— Défilement horizontal sans barre visible ——— */
+  .scroll-x {
+    @apply flex overflow-x-auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll-x::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ——— Grille de navigation en fond ——— */
+  .grid-bg {
+    @apply bg-grid bg-grid-sm md:bg-grid;
+  }
+}
+
+@layer utilities {
+  /* Dégradé de texte signature */
+  .text-gradient {
+    @apply bg-gradient-to-br from-white via-chrome to-steel bg-clip-text text-transparent;
+  }
+  .text-gradient-aurora {
+    @apply bg-gradient-to-r from-aurora via-plasma to-ember bg-clip-text text-transparent;
+  }
+
+  /* Masque de dégradé vertical, pour fondre une section dans le fond */
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  }
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+
+  /* Délais d'apparition en cascade */
+  .delay-1 { animation-delay: 80ms; }
+  .delay-2 { animation-delay: 160ms; }
+  .delay-3 { animation-delay: 240ms; }
+  .delay-4 { animation-delay: 320ms; }
+  .delay-5 { animation-delay: 400ms; }
+  .delay-6 { animation-delay: 480ms; }
+}
+
+/* ==========================================================================
+   ACCESSIBILITÉ — RÉDUCTION DES ANIMATIONS
+   Respecte le réglage système « réduire les animations ». Le site reste
+   entièrement fonctionnel et lisible : seules les animations décoratives
+   sont neutralisées, rien n'est masqué.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Les éléments animés à l'apparition doivent rester visibles */
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-scale-in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Défilement du pointillé des trajectoires de la carte du monde.
+   Défini globalement plutôt que dans le composant : styled-jsx renomme les
+   @keyframes scopés, ce qui casserait la référence depuis une classe Tailwind. */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -220;
+  }
+}
+
+/* Balayage lumineux de la carte du hero. */
+@keyframes hero-sweep {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.6;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Apparition d'un point de destination. */
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+    transform-origin: center;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Impulsion lumineuse descendant le filet de transition du hero. */
+@keyframes trace {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(4.25rem);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   ILLUSTRATIONS DES PLATS — tracé animé
+   Par défaut (rendu serveur, sans JavaScript, animations réduites), le dessin
+   est complet. `armed` masque les traits d'un dessin encore hors champ ;
+   `drawing` les trace lorsqu'il entre dans le champ de vision.
+   Les éléments portent pathLength="1" : un tiret de longueur 1 couvre
+   exactement le trait, quelle que soit sa longueur réelle.
+   ========================================================================== */
+.dish-art[data-state='armed'] .ds {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.dish-art[data-state='armed'] .df {
+  opacity: 0;
+}
+.dish-art[data-state='drawing'] .ds {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: dish-draw 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.dish-art[data-state='drawing'] .df {
+  opacity: 0;
+  animation: dish-fill 0.9s ease 0.5s forwards;
+}
+.dish-art[data-state='drawing'] .d2 {
+  animation-delay: 0.35s;
+}
+.dish-art[data-state='drawing'] .d3 {
+  animation-delay: 0.6s;
+}
+.dish-art[data-state='drawing'] .d4 {
+  animation-delay: 1.2s;
+}
+
+@keyframes dish-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes dish-fill {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Vapeur : montée lente et continue. */
+.dish-art .steam {
+  animation: steam-rise 4.8s ease-in-out infinite;
+}
+@keyframes steam-rise {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+/* Flammes : léger vacillement, ancré à la base. */
+.dish-art .flicker {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flicker 1.4s ease-in-out infinite alternate;
+}
+@keyframes flicker {
+  from {
+    transform: scaleY(0.88);
+  }
+  to {
+    transform: scaleY(1.08);
+  }
+}

@@ -1,0 +1,8 @@
+# Fins de ligne normalisées en LF : le site est développé sous Windows
+# mais déployé sous Linux (Netlify, Vercel, VPS).
+* text=auto eol=lf
+
+*.webp binary
+*.jpg binary
+*.png binary
+*.ico binary
