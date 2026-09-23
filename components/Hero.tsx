@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { RESTAURANT } from '@/data/restaurant';
 import OpenStatus from './OpenStatus';
-import HeroGlobe from './HeroGlobe';
+import HeroIntroMount from './HeroIntroMount';
 
 /**
  * HERO
@@ -30,10 +30,18 @@ export default function Hero() {
       className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-10 pt-28 md:justify-center md:pb-24"
       aria-labelledby="hero-titre"
     >
-      {/* ——————————————— Fond ——————————————— */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-void">
-        <HeroGlobe />
+      {/*
+        Intro animée : la Terre apparaît, l'avion en fait le tour, puis le
+        globe continue de tourner. Le composant pose lui-même sa couche de
+        fond (-z-10) ET sa couche avant (z-10) : il doit donc être un enfant
+        DIRECT de la section. three.js y est chargé à la demande. Placé dans le conteneur de fond ci-dessous, son
+        avion resterait prisonnier du plan négatif et passerait derrière le
+        titre au lieu de devant.
+      */}
+      <HeroIntroMount />
 
+      {/* ——————————————— Voiles, entre le globe et le texte ——————————————— */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10">
         {/* Grille d'interface, très discrète par-dessus l'espace */}
         <div className="absolute inset-0 grid-bg opacity-[0.28]" />
 
